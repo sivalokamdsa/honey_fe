@@ -4,6 +4,7 @@ import {
   createRegistration,
   type RegistrationInput,
 } from "../api/registrations";
+import SiteNav from "../components/SiteNav";
 import "./Register.css";
 
 type FieldErrors = Partial<Record<keyof RegistrationInput, string>>;
@@ -54,6 +55,8 @@ export default function Register() {
 
   return (
     <>
+      <SiteNav />
+
       <header className="hero">
         <div className="hero-inner">
           <div className="hero-drop" />
