@@ -7,6 +7,7 @@
 }
 .site-nav-inner {
   display: flex;
+  align-items: center;
   gap: 4px;
   max-width: var(--max-w);
   margin: 0 auto;
@@ -33,8 +34,18 @@
   background: linear-gradient(160deg, var(--honey-gold), var(--honey-comb));
   color: #fff;
 }
-.site-nav-inner a.nav-register {
+
+/* ---------- LINK GROUP (desktop: one row, pushed right) ---------- */
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 4px;
   margin-left: auto;
+}
+
+/* ---------- MOBILE TOGGLE (hidden on desktop) ---------- */
+.nav-toggle {
+  display: none;
 }
 
 /* ---------- CONTENTS DROPDOWN ---------- */
@@ -81,6 +92,81 @@
 }
 .nav-submenu a {
   display: block;
+}
+
+/* ---------- PHONE LAYOUT ---------- */
+@media (max-width: 719px) {
+  .nav-toggle {
+    display: inline-flex;
+    align-items: center;
+    margin-left: auto;
+    font-family: "Poppins", "Noto Sans Telugu", sans-serif;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--honey-cream);
+    background: rgba(232, 167, 61, 0.15);
+    border: 1px solid rgba(232, 167, 61, 0.35);
+    border-radius: 20px;
+    padding: 6px 14px;
+    cursor: pointer;
+  }
+  .nav-toggle[aria-expanded="true"] {
+    background: rgba(232, 167, 61, 0.35);
+    color: var(--honey-gold);
+  }
+
+  /* The link panel drops down under the bar, full width. */
+  .nav-links {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 4px;
+    margin: 0;
+    max-height: calc(100vh - 56px);
+    overflow-y: auto;
+    padding: 8px 16px 16px;
+    background: #2a1a0c;
+    border-bottom: 1px solid rgba(232, 167, 61, 0.35);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.35);
+  }
+  .nav-links.is-open {
+    display: flex;
+  }
+  .nav-links a {
+    padding: 10px 12px;
+  }
+  .site-nav-inner a.nav-register {
+    text-align: center;
+  }
+
+  /* Dropdowns become plain indented lists inside the panel. */
+  .nav-menu {
+    position: static;
+  }
+  .nav-menu-trigger {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 10px 12px 4px;
+    color: var(--honey-gold);
+    pointer-events: none;
+  }
+  .nav-submenu {
+    display: flex;
+    position: static;
+    min-width: 0;
+    max-height: none;
+    overflow: visible;
+    padding: 0 0 4px 12px;
+    background: none;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
 }
 
 /* Keep jumped-to sections clear of the sticky bar. */
