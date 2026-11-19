@@ -62,12 +62,12 @@ export default function Register() {
           <div className="hero-drop" />
           <div className="hero-eyebrow">
             <span className="dot" />
-            Honey Course
+            ప్రకృతి ఆరోగ్య గ్రంథం
             <span className="dot" />
           </div>
           <h1>నమోదు చేసుకోండి</h1>
           <p className="tag">
-            Register for the honey course. We will contact you with details.
+            Register for the honey product. We will contact you with details.
           </p>
         </div>
       </header>
@@ -134,7 +134,7 @@ export default function Register() {
                   />
                   <span>
                     I agree that my details are stored to contact me about the
-                    course.
+                    honey product.
                   </span>
                 </label>
                 {errors.consent && (
@@ -157,7 +157,7 @@ export default function Register() {
       </main>
 
       <footer>
-        <div className="hexline" />© Honey Course
+        <div className="hexline" />© Honey Product
       </footer>
     </>
   );
