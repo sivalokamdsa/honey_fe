@@ -85,7 +85,8 @@ export default function Register() {
           ) : (
             <form onSubmit={onSubmit} noValidate>
               <p className="register-why">
-                We use these details only to contact you about the honey course.
+                We use these details only to contact you about the honey
+                product.
               </p>
 
               <Field label="Full name *" error={errors.fullName}>

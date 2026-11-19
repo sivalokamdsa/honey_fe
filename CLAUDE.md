@@ -12,6 +12,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 There is no test runner configured. No test script, no test files. Don't assume `npm test` exists.
 
+The git repo root is `web/`, not the parent `honey-fe/` folder. Run git commands from `web/`. The `.github/` workflow is inside `web/` too.
+
+Baseline: `npx tsc -b` and `npm run lint` both pass on a clean checkout.
+
 ## Architecture
 
 Single-page React 19 app with two routes, using `react-router-dom` with `HashRouter` (URLs look like `/#/register`, so static hosting needs no rewrite rules):
@@ -42,3 +46,4 @@ Registration form details:
 
 - `README.md` is still the Vite template boilerplate.
 - The favicon is still the default `vite.svg`.
+- `index.html` declares `<meta name="viewport">` twice. Remove one.
