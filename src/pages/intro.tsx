@@ -150,7 +150,7 @@ const displayExtra = false;
 export default function Intro() {
   return (
     <>
-      <SiteNav menusections={menusections} />
+      <SiteNav sections={menusections} />
 
       <header className="hero">
         <div className="hero-inner">
