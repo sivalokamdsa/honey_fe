@@ -18,11 +18,12 @@ Baseline: `npx tsc -b` and `npm run lint` both pass on a clean checkout.
 
 ## Architecture
 
-Single-page React 19 app with two routes, using `react-router-dom` with `HashRouter` (URLs look like `/#/register`, so static hosting needs no rewrite rules):
+Single-page React 19 app with four routes, using `react-router-dom` with `HashRouter` (URLs look like `/#/register`, so static hosting needs no rewrite rules):
 
-- `src/App.tsx` — `/` renders `pages/Home`, `/register` renders `pages/Register`.
+- `src/App.tsx` — `/` renders `pages/Home`, `/beekeeping` renders `pages/BeeKeeping`, `/beekeeping2` renders `pages/BeeKeeping2`, `/register` renders `pages/Register`.
 - `src/pages/Home.tsx` — the Telugu honey guide. Prose and tables are inline JSX; long lists come from `src/data/recipes.ts`, `src/data/remedies.ts`, and `src/data/beauty.ts`. Styles are in `Home.css`, on top of `index.css` (palette, hero, footer).
-- `src/components/SiteNav.tsx` — shared sticky nav used by both pages. On Home it gets section links that scroll with `scrollIntoView`, because `href="#section"` would clash with the hash router.
+- `src/pages/BeeKeeping.tsx` (~2,500 lines) and `src/pages/BeeKeeping2.tsx` are page-by-page notes from a beekeeping book. Each book page is a section with id `page<N>`. The submenu list is generated from page numbers at the top of each file (`BeeKeeping` skips page 26, which does not exist). Both files reuse `Register.css` for styling.
+- `src/components/SiteNav.tsx` — shared sticky nav used by every page. It takes an optional `sections` prop for the submenu. The nav is responsive and has a hamburger menu (`☰ మెనూ · Menu`). On pages with sections, links scroll with `scrollIntoView`, because `href="#section"` would clash with the hash router.
 
 Registration form details:
 
@@ -47,3 +48,5 @@ Registration form details:
 - `README.md` is still the Vite template boilerplate.
 - The favicon is still the default `vite.svg`.
 - `index.html` declares `<meta name="viewport">` twice. Remove one.
+- `dist/` is a build output, gitignored, and rebuilt by `npm run build`. Don't edit it or treat it as source.
+- `BeeKeeping.tsx` and `BeeKeeping2.tsx` import `Register.css` instead of their own stylesheet. Splitting that out is a cleanup if those pages change.

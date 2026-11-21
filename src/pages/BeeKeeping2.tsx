@@ -1,5 +1,6 @@
 import SiteNav, { type SectionLink } from "../components/SiteNav";
 import "./Register.css";
+import { useScrollToPageParam } from "../hooks/useScrollToPageParam";
 
 const sections: SectionLink[] = Array.from({ length: 5 }, (_, i) => ({
   id: `page${47 + i}`,
@@ -7,6 +8,7 @@ const sections: SectionLink[] = Array.from({ length: 5 }, (_, i) => ({
 }));
 
 export default function BeeKeeping2() {
+  useScrollToPageParam();
   return (
     <>
       <SiteNav sections={sections} />

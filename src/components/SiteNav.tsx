@@ -6,6 +6,7 @@ export type SectionLink = { id: string; label: string };
 
 type Props = {
   sections?: SectionLink[];
+  menusections?: SectionLink[];
 };
 
 function scrollToSection(id: string) {
@@ -17,7 +18,7 @@ function scrollToSection(id: string) {
   };
 }
 
-export default function SiteNav({ sections = [] }: Props) {
+export default function SiteNav({ sections = [], menusections = [] }: Props) {
   // Phones only: the links sit in a panel behind the ☰ button.
   const [open, setOpen] = useState(false);
 
@@ -30,6 +31,7 @@ export default function SiteNav({ sections = [] }: Props) {
     <nav className="site-nav" aria-label="Main">
       <div className="site-nav-inner">
         <NavLink to="/">హోమ్ · Home</NavLink>
+        <NavLink to="/intro">Index</NavLink>
 
         <button
           type="button"
@@ -54,13 +56,18 @@ export default function SiteNav({ sections = [] }: Props) {
               </button>
               <div className="nav-submenu">
                 {sections.map((s) => (
-                  <a key={s.id} href={`#${s.id}`} onClick={scrollToSection(s.id)}>
+                  <a
+                    key={s.id}
+                    href={`#${s.id}`}
+                    onClick={scrollToSection(s.id)}
+                  >
                     {s.label}
                   </a>
                 ))}
               </div>
             </div>
           )}
+
           <div className="nav-menu">
             <button type="button" className="nav-menu-trigger">
               తేనెటీగల పెంపకం ▾

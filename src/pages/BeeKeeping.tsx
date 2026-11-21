@@ -1,5 +1,6 @@
 import SiteNav, { type SectionLink } from "../components/SiteNav";
 import "./Register.css";
+import { useScrollToPageParam } from "../hooks/useScrollToPageParam";
 
 // One submenu entry per page section (page 26 does not exist in this book).
 const pageNumbers = [
@@ -12,6 +13,7 @@ const sections: SectionLink[] = pageNumbers.map((n) => ({
 }));
 
 export default function BeeKeeping() {
+  useScrollToPageParam();
   return (
     <>
       <SiteNav sections={sections} />
