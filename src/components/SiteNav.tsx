@@ -6,7 +6,6 @@ export type SectionLink = { id: string; label: string };
 
 type Props = {
   sections?: SectionLink[];
-  menusections?: SectionLink[];
 };
 
 function scrollToSection(id: string) {
@@ -18,7 +17,7 @@ function scrollToSection(id: string) {
   };
 }
 
-export default function SiteNav({ sections = [], menusections = [] }: Props) {
+export default function SiteNav({ sections = [] }: Props) {
   // Phones only: the links sit in a panel behind the ☰ button.
   const [open, setOpen] = useState(false);
 
