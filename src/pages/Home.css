@@ -78,6 +78,9 @@ tbody tr:last-child td {
 }
 
 /* ---------- RECIPES ---------- */
+#recipes {
+  display: none;
+}
 .recipe-grid {
   display: grid;
   gap: 20px;

@@ -18,12 +18,14 @@ Baseline: `npx tsc -b` and `npm run lint` both pass on a clean checkout.
 
 ## Architecture
 
-Single-page React 19 app with four routes, using `react-router-dom` with `HashRouter` (URLs look like `/#/register`, so static hosting needs no rewrite rules):
+Single-page React 19 app with five routes, using `react-router-dom` with `HashRouter` (URLs look like `/#/register`, so static hosting needs no rewrite rules):
 
-- `src/App.tsx` — `/` renders `pages/Home`, `/beekeeping` renders `pages/BeeKeeping`, `/beekeeping2` renders `pages/BeeKeeping2`, `/register` renders `pages/Register`.
+- `src/App.tsx` — `/` renders `pages/Home`, `/intro` renders `pages/intro` (the book's table of contents, which links into the beekeeping pages), `/beekeeping` renders `pages/BeeKeeping`, `/beekeeping2` renders `pages/BeeKeeping2`, `/register` renders `pages/Register`.
 - `src/pages/Home.tsx` — the Telugu honey guide. Prose and tables are inline JSX; long lists come from `src/data/recipes.ts`, `src/data/remedies.ts`, and `src/data/beauty.ts`. Styles are in `Home.css`, on top of `index.css` (palette, hero, footer).
 - `src/pages/BeeKeeping.tsx` (~2,500 lines) and `src/pages/BeeKeeping2.tsx` are page-by-page notes from a beekeeping book. Each book page is a section with id `page<N>`. The submenu list is generated from page numbers at the top of each file (`BeeKeeping` skips page 26, which does not exist). Both files reuse `Register.css` for styling.
-- `src/components/SiteNav.tsx` — shared sticky nav used by every page. It takes an optional `sections` prop for the submenu. The nav is responsive and has a hamburger menu (`☰ మెనూ · Menu`). On pages with sections, links scroll with `scrollIntoView`, because `href="#section"` would clash with the hash router.
+- `src/components/SiteNav.tsx` — shared sticky nav used by every page. It takes an optional `sections` prop for the submenu. The nav is responsive and has a hamburger menu (`☰ మెనూ · Menu`). On pages with sections, links scroll with `scrollIntoView`, because `href="#section"` would clash with the hash router. `SiteNav.css` holds its styles.
+- `src/hooks/useScrollToPageParam.ts` — `BeeKeeping2` uses it to scroll to `<section id="pageN">` when the URL has `?page=N` (e.g. `/#/beekeeping2?page=48`). The intro TOC relies on these links. Note that `BeeKeeping.tsx` does not call the hook yet; add it there if its TOC links need `?page=` support.
+- `src/pages/intro.tsx` + `intro.css` — the TOC page. Its `menusections` array is hand-maintained and must stay in sync with which page numbers actually exist across `BeeKeeping` and `BeeKeeping2`.
 
 Registration form details:
 

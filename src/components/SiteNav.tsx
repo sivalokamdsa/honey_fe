@@ -31,7 +31,8 @@ export default function SiteNav({ sections = [] }: Props) {
       <div className="site-nav-inner">
         <NavLink to="/">హోమ్ · Home</NavLink>
         <NavLink to="/intro">Index</NavLink>
-
+        <NavLink to="/checkout">Checkout</NavLink>
+        <NavLink to="/register">నమోదు · Register</NavLink>
         <button
           type="button"
           className="nav-toggle"
@@ -76,9 +77,6 @@ export default function SiteNav({ sections = [] }: Props) {
               <NavLink to="/beekeeping2">తేనెటీగల పెంపకం2</NavLink>
             </div>
           </div>
-          <NavLink to="/register" className="nav-register">
-            నమోదు · Register
-          </NavLink>
         </div>
       </div>
     </nav>

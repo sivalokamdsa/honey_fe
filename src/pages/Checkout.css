@@ -1,0 +1,149 @@
+.checkout-grid {
+  display: grid;
+  gap: 20px;
+  padding-bottom: 40px;
+}
+@media (min-width: 820px) {
+  .checkout-grid {
+    grid-template-columns: 1.2fr 1fr;
+    align-items: start;
+  }
+}
+
+.checkout-card {
+  background: var(--card-bg);
+  border: 1px solid var(--honey-line);
+  border-radius: 14px;
+  padding: 22px 20px;
+  margin-top: 24px;
+}
+.checkout-grid > .checkout-card {
+  margin-top: 0;
+}
+.checkout-card h2 {
+  font-size: 20px;
+  margin-bottom: 14px;
+}
+
+.product-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.product-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 0;
+  border-bottom: 1px dashed var(--honey-line);
+}
+.product-name {
+  font-weight: 600;
+}
+.product-desc {
+  font-size: 14px;
+  color: #6b5540;
+}
+.product-price {
+  font-weight: 600;
+}
+.product-price .mrp {
+  margin-left: 8px;
+  font-weight: 400;
+  color: #8a7154;
+}
+.out-of-stock {
+  color: var(--honey-maroon);
+  font-size: 14px;
+}
+
+.qty {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.qty button {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid var(--honey-comb);
+  background: var(--honey-cream);
+  color: var(--honey-dark);
+  font-size: 18px;
+  cursor: pointer;
+}
+.qty button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.summary {
+  margin-top: 16px;
+  display: grid;
+  gap: 8px;
+}
+.summary > div {
+  display: flex;
+  justify-content: space-between;
+}
+.summary .savings {
+  color: #2e7d32;
+}
+.summary .total {
+  font-weight: 700;
+  font-size: 18px;
+  border-top: 1px solid var(--honey-line);
+  padding-top: 10px;
+}
+.hint {
+  font-size: 13px;
+  color: #8a7154;
+  margin: 4px 0 0;
+}
+
+.field {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+.field input {
+  font: inherit;
+  padding: 10px 12px;
+  border: 1px solid var(--honey-line);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--honey-dark);
+}
+.field input[aria-invalid="true"] {
+  border-color: var(--honey-maroon);
+}
+.field-error {
+  color: var(--honey-maroon);
+  font-size: 13px;
+}
+
+.form-error {
+  background: #fdecea;
+  color: #8b1d12;
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin-bottom: 14px;
+  font-size: 14px;
+}
+
+.pay-btn {
+  width: 100%;
+  font: inherit;
+  font-weight: 700;
+  padding: 14px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--honey-comb);
+  color: #fff;
+  cursor: pointer;
+}
+.pay-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
