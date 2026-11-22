@@ -18,24 +18,34 @@ export type CreateOrderInput = {
 };
 
 /**
+ * The Razorpay order object (Orders API response), as returned by the
+ * backend. Amounts are in paise. The backend sets `receipt` to our internal
+ * order id, so verification can find the order again.
+ */
+export type RazorpayOrder = {
+  id: string; // order_XXXX, passed to the Razorpay Checkout widget
+  entity: "order";
+  amount: number; // total to charge, in paise
+  amount_due: number;
+  amount_paid: number;
+  currency: string; // "INR"
+  receipt: string | null; // our internal order id
+  status: "created" | "attempted" | "paid";
+  attempts: number;
+  created_at: number; // unix seconds
+  notes: unknown[] | Record<string, unknown>;
+  offer_id: string | null;
+};
+
+/**
  * Returned by the backend after it has re-priced the cart itself.
  * The amount here is authoritative; the client never sends prices.
  */
 export type CheckoutOrder = {
-  /** Our internal order id, used when verifying the payment. */
-  orderId: string;
-  /** Razorpay order id, passed to the Razorpay Checkout widget. */
-  razorpayOrderId: string;
   /** Public Razorpay key id (never the secret). */
   keyId: string;
-  /** Total to charge, in paise. */
-  amountPaise: number;
-  currency: string;
-  breakdown: {
-    subtotalPaise: number;
-    discountPaise: number;
-    totalPaise: number;
-  };
+  /** The Razorpay order that the widget will charge. */
+  order: RazorpayOrder;
 };
 
 export type PaymentVerification = {
