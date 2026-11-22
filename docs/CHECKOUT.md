@@ -26,7 +26,7 @@ The frontend lives in this repo. The backend lives outside it. The backend must 
 
 1. **Money is always an integer number of paise.** 1 INR = 100 paise. `₹450.00` is `45000`. Never use floats for money. Convert to rupees only for display, with `formatINR()`.
 2. **The browser never decides the amount that is charged.** The frontend sends product ids and quantities. The backend looks up the prices, computes the total, and creates the Razorpay order. Razorpay is charged the amount the backend returned. The subtotal shown on the page is an estimate for the customer's benefit.
-3. **The Razorpay secret key never reaches the browser.** The browser only receives `keyId`, which is the public key.
+3. **The Razorpay secret key never reaches the browser.** The browser only receives `razorpayKeyId`, which is the public key.
 4. **Payment is not trusted until the backend verifies the signature.** Razorpay's success callback is produced by the browser. Only the backend's HMAC check against the secret proves the payment is genuine.
 5. **The cart is per browser.** It is stored in `localStorage`, not in the database. Nothing about the cart is sent to the server until the customer presses Pay.
 
@@ -68,24 +68,59 @@ Built at render time by joining the cart with the loaded products. It is not sto
 
 ```ts
 type CheckoutCustomer = {
-  fullName: string;   // required
+  name: string;       // required
   phone: string;      // required, 10 digits
   email?: string;     // optional, must look like an email if given
   city?: string;      // optional
 };
 ```
 
-### CheckoutOrder (returned by the backend)
+### CheckoutOrder (response of `POST /api/v1/checkout/orders`)
 
 ```ts
 type CheckoutOrder = {
-  orderId: string;          // our internal order id
-  razorpayOrderId: string;  // passed to the Razorpay widget
-  keyId: string;            // public key id
-  amountPaise: number;      // the amount to charge, decided by the backend
+  orderId: string;          // our internal order id, used when verifying
+  status: string;           // "created" while the order can still be paid
+  razorpayOrderId: string;  // order_..., passed to the Razorpay widget
+  razorpayKeyId: string;    // public key id (never the secret)
   currency: string;         // "INR"
-  breakdown: { subtotalPaise: number; discountPaise: number; totalPaise: number };
+  subtotalPaise: number;
+  discountPaise: number;
+  totalPaise: number;       // the amount to charge, decided by the backend
+  items: CheckoutOrderItem[];
 };
+
+type CheckoutOrderItem = {
+  productId: string;
+  name: string;
+  unitPricePaise: number;
+  quantity: number;
+  lineTotalPaise: number;
+};
+```
+
+Example response, from the live test-mode backend:
+
+```json
+{
+  "orderId": "0b045374-6293-46a7-857a-628d7abda087",
+  "status": "created",
+  "razorpayOrderId": "order_U3B6Hq3WUJqIE3",
+  "razorpayKeyId": "rzp_test_U0n1H2aYMlK4L2",
+  "currency": "INR",
+  "subtotalPaise": 90000,
+  "discountPaise": 0,
+  "totalPaise": 90000,
+  "items": [
+    {
+      "productId": "honey-1l",
+      "name": "Pure Honey — 1 Litre",
+      "unitPricePaise": 45000,
+      "quantity": 2,
+      "lineTotalPaise": 90000
+    }
+  ]
+}
 ```
 
 ### PaymentVerification and PaymentResult
@@ -136,7 +171,7 @@ type PaymentResult = { status: "paid"; orderId: string; paymentId: string };
 4. `lines` is derived as: products that are **in stock** and have **quantity > 0** in the cart. Anything else is ignored. This means a stale cart entry for a removed or out-of-stock product cannot affect the totals.
 5. `subtotal = Σ pricePaise × quantity` over `lines`.
 6. `savings = Σ (mrpPaise − pricePaise) × quantity` over `lines`, counting only products where MRP is higher than the selling price.
-7. The summary shows Subtotal, You save (if > 0), and Total (estimate). The estimate equals the subtotal today. The page does not add tax, shipping or discounts; the backend's `breakdown` is the authority.
+7. The summary shows Subtotal, You save (if > 0), and Total (estimate). The estimate equals the subtotal today. The page does not add tax, shipping or discounts; the backend's `totalPaise` is the authority.
 
 ### Step C: validating the form
 
@@ -170,7 +205,7 @@ Content-Type: application/json
 
 {
   "items": [{ "productId": "honey-1l", "quantity": 2 }],
-  "customer": { "fullName": "…", "phone": "9999999999", "email": "…", "city": "…" }
+  "customer": { "name": "…", "phone": "9999999999", "email": "…", "city": "…" }
 }
 ```
 
@@ -180,14 +215,15 @@ On failure, `ApiError` is thrown and caught in step G.
 
 ### Step F: open the Razorpay widget
 
+0. Guard the response before opening anything. The order must have `status === "created"` and `totalPaise > 0`. Otherwise the page shows "This order can no longer be paid. Please start again." and stops.
 1. `loadRazorpay()` injects `https://checkout.razorpay.com/v1/checkout.js` if it is not already on the page. The promise is cached, so the script loads once per page session.
 2. If the script fails to load, the error "Could not load the payment gateway…" is shown.
 3. `new window.Razorpay(options)` is created with:
 
 | Option | Value |
 | --- | --- |
-| `key` | `order.keyId` |
-| `amount` | `order.amountPaise` (the server's amount) |
+| `key` | `order.razorpayKeyId` |
+| `amount` | `order.totalPaise` (the server's amount, in paise) |
 | `currency` | `order.currency` |
 | `order_id` | `order.razorpayOrderId` |
 | `name` | "తేనె" |
@@ -278,7 +314,7 @@ Errors: a JSON body with `detail` is shown to the customer when present.
 4. Compute `subtotalPaise`, any discount, and `totalPaise` from **server-side prices**.
 5. Create a Razorpay order with `amount = totalPaise`, `currency = "INR"`, and a receipt such as the internal order id. Use the **secret** key for this call.
 6. Save an internal order row with status `created` (or similar), the items, the customer details and the amount.
-7. Return the `CheckoutOrder` shape from section 3.
+7. Return the flat `CheckoutOrder` object from section 3: `orderId`, `status`, `razorpayOrderId`, `razorpayKeyId`, `currency`, `subtotalPaise`, `discountPaise`, `totalPaise` and `items`. The frontend uses `status`, `totalPaise`, `razorpayOrderId`, `razorpayKeyId`, `currency` and `orderId`. The `items` array is returned for display but the page does not show it yet.
 
 Errors: return a `4xx` with `{ "detail": "…", "errors": { "fieldName": "…" } }`. The frontend uses `detail` as the message.
 
@@ -346,17 +382,17 @@ The DEV-only fallback in `products.ts` already covers local development.
 - [ ] Declined payment shows Razorpay's message and re-enables Pay.
 - [ ] Successful payment and verification shows the success screen and clears the cart.
 - [ ] Verification failure shows the payment id and keeps the cart.
-- [ ] Amount shown by Razorpay equals `amountPaise` from the backend.
+- [ ] Amount shown by Razorpay equals `totalPaise` from the backend.
 - [ ] Products endpoint failure in production shows an error, not sample products (see [section 8](#8-fallback-behaviour)).
 
 ---
 
 ## 11. Known gaps
 
-- **No delivery address.** The form collects name, phone, email and city only. Shipping will need address fields and possibly a shipping charge in the backend's `breakdown`.
+- **No delivery address.** The form collects name, phone, email and city only. Shipping will need address fields and possibly a shipping charge in the backend's totals.
 - **No stock reservation.** Stock is checked when the order is created, not reserved. Two customers can buy the last jar at the same time.
 - **No webhook handling** in the frontend contract. See section 7.
-- **Totals are an estimate.** The page does not show the backend's breakdown before the widget opens. The customer sees the server's amount only inside Razorpay.
+- **Totals are an estimate until the order exists.** The page does not show the backend's `items` or `totalPaise` before the widget opens. The customer sees the server's amount only inside Razorpay.
 - **Cart is not tied to an account.** There are no logins, so an order cannot be looked up later by the customer.
 - **Deprecated type.** `Checkout.tsx` imports `FormEvent`, which TypeScript marks as deprecated. It works but should be replaced with the current event type.
 - **Unused fields.** `imageUrl` on `Product` is declared but not rendered, and `loadError` is never set.

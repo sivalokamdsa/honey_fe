@@ -120,7 +120,7 @@ export default function Checkout() {
     setPaying(true);
     try {
       // 1. Backend re-prices the cart and opens a Razorpay order.
-      const { keyId, order } = await createCheckoutOrder({
+      const order = await createCheckoutOrder({
         items: lines.map((l) => ({
           productId: l.product.id,
           quantity: l.quantity,
@@ -133,26 +133,23 @@ export default function Checkout() {
         },
       });
 
-      // Razorpay only accepts an order that is still unpaid.
-      if (order.status !== "created" || order.amount_due <= 0) {
+      // Only an order still awaiting payment can be charged.
+      if (order.status !== "created" || order.totalPaise <= 0) {
         throw new Error("This order can no longer be paid. Please start again.");
       }
-      if (!order.receipt) {
-        throw new Error("Order reference missing. Please try again.");
-      }
-      const internalOrderId = order.receipt;
+      const internalOrderId = order.orderId;
 
-      // 2. Open the Razorpay widget with the server's amount, not ours.
+      // 2. Open the Razorpay widget with the server's total, not ours.
       await loadRazorpay();
       if (!window.Razorpay) throw new Error("Payment gateway unavailable.");
 
       const rzp = new window.Razorpay({
-        key: keyId,
-        amount: order.amount_due,
+        key: order.razorpayKeyId,
+        amount: order.totalPaise,
         currency: order.currency,
         name: "తేనె",
         description: "Honey order",
-        order_id: order.id,
+        order_id: order.razorpayOrderId,
         prefill: {
           name: customer.name,
           email: customer.email || undefined,
