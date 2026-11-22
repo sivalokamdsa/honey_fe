@@ -45,7 +45,7 @@ export default function Checkout() {
   const [loadError] = useState<string | null>(null);
   const [cart, setCart] = useState<Cart>(readCart);
   const [customer, setCustomer] = useState<CheckoutCustomer>({
-    fullName: "",
+    name: "",
     phone: "",
     email: "",
     city: "",
@@ -102,7 +102,7 @@ export default function Checkout() {
 
   function validate(): boolean {
     const errs: Record<string, string> = {};
-    if (!customer.fullName.trim()) errs.fullName = "Please enter your name.";
+    if (!customer.name.trim()) errs.name = "Please enter your name.";
     if (!/^\d{10}$/.test(customer.phone.trim()))
       errs.phone = "Enter a 10-digit phone number.";
     if (customer.email && !/^\S+@\S+\.\S+$/.test(customer.email))
@@ -126,7 +126,7 @@ export default function Checkout() {
           quantity: l.quantity,
         })),
         customer: {
-          fullName: customer.fullName.trim(),
+          name: customer.name.trim(),
           phone: customer.phone.trim(),
           email: customer.email?.trim() || undefined,
           city: customer.city?.trim() || undefined,
@@ -145,7 +145,7 @@ export default function Checkout() {
         description: "Honey order",
         order_id: order.razorpayOrderId,
         prefill: {
-          name: customer.fullName,
+          name: customer.name,
           email: customer.email || undefined,
           contact: customer.phone,
         },
@@ -297,9 +297,9 @@ export default function Checkout() {
               <form onSubmit={onPay} noValidate>
                 <Field
                   label="Full name *"
-                  value={customer.fullName}
-                  error={fieldErrors.fullName}
-                  onChange={(v) => updateCustomer("fullName", v)}
+                  value={customer.name}
+                  error={fieldErrors.name}
+                  onChange={(v) => updateCustomer("name", v)}
                 />
                 <Field
                   label="Phone *"

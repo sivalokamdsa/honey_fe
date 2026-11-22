@@ -6,7 +6,7 @@ export type CheckoutItem = {
 };
 
 export type CheckoutCustomer = {
-  fullName: string;
+  name: string;
   phone: string;
   email?: string;
   city?: string;
