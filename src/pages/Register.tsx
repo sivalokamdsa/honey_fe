@@ -1,4 +1,5 @@
 import { useState, type FormEvent, type ReactNode } from "react";
+import { Link } from "react-router-dom";
 import {
   ApiError,
   createRegistration,
@@ -14,6 +15,7 @@ const emptyForm: RegistrationInput = {
   phone: "",
   email: "",
   city: "",
+  password: "",
   consent: false,
 };
 
@@ -126,6 +128,16 @@ export default function Register() {
                 </Field>
               </div>
 
+              <Field label="Password *" error={errors.password}>
+                <input
+                  type="password"
+                  autoComplete="new-password"
+                  placeholder="8–72 characters"
+                  value={form.password}
+                  onChange={(e) => update("password", e.target.value)}
+                />
+              </Field>
+
               <div className="field">
                 <label className="consent">
                   <input
@@ -152,6 +164,10 @@ export default function Register() {
               <button type="submit" className="btn-honey" disabled={submitting}>
                 {submitting ? "Saving…" : "Register"}
               </button>
+
+              <p className="register-why">
+                Already registered? <Link to="/login">Login</Link>
+              </p>
             </form>
           )}
         </div>

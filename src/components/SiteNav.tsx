@@ -33,6 +33,7 @@ export default function SiteNav({ sections = [] }: Props) {
         <NavLink to="/intro">Index</NavLink>
         <NavLink to="/checkout">Checkout</NavLink>
         <NavLink to="/register">నమోదు · Register</NavLink>
+        <NavLink to="/login">లాగిన్ · Login</NavLink>
         <button
           type="button"
           className="nav-toggle"

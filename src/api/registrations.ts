@@ -3,6 +3,7 @@ export type RegistrationInput = {
   phone: string;
   email?: string;
   city?: string;
+  password: string;
   consent: boolean;
 };
 
