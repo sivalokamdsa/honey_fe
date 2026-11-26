@@ -1,0 +1,23 @@
+.admin-card {
+  max-width: 100%;
+}
+.admin-table-wrap {
+  overflow-x: auto;
+}
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+.admin-table th,
+.admin-table td {
+  text-align: left;
+  padding: 10px 8px;
+  border-bottom: 1px solid var(--honey-line);
+  vertical-align: top;
+  white-space: nowrap;
+}
+.admin-table th {
+  color: var(--honey-maroon);
+  font-weight: 600;
+}

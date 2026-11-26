@@ -1,5 +1,6 @@
 import { useState, type MouseEvent } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useAuth } from "../auth/useAuth";
 import "./SiteNav.css";
 
 export type SectionLink = { id: string; label: string };
@@ -20,10 +21,18 @@ function scrollToSection(id: string) {
 export default function SiteNav({ sections = [] }: Props) {
   // Phones only: the links sit in a panel behind the ☰ button.
   const [open, setOpen] = useState(false);
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
 
   // Close the phone panel once a link is chosen.
   function closeOnLinkClick(e: MouseEvent<HTMLDivElement>) {
     if ((e.target as HTMLElement).closest("a")) setOpen(false);
+  }
+
+  function onLogout() {
+    setOpen(false);
+    logout();
+    navigate("/");
   }
 
   return (
@@ -33,7 +42,19 @@ export default function SiteNav({ sections = [] }: Props) {
         <NavLink to="/intro">Index</NavLink>
         <NavLink to="/checkout">Checkout</NavLink>
         <NavLink to="/register">నమోదు · Register</NavLink>
-        <NavLink to="/login">లాగిన్ · Login</NavLink>
+        {user ? (
+          <>
+            {user.role === "admin" && <NavLink to="/admin">Admin</NavLink>}
+            <span className="nav-user" title={user.phone}>
+              {user.fullName}
+            </span>
+            <button type="button" className="nav-logout" onClick={onLogout}>
+              Logout
+            </button>
+          </>
+        ) : (
+          <NavLink to="/login">లాగిన్ · Login</NavLink>
+        )}
         <button
           type="button"
           className="nav-toggle"

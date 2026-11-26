@@ -1,4 +1,5 @@
 import { ApiError } from "./registrations";
+import { authHeaders, notifyIfUnauthorized } from "./client";
 
 export type CheckoutItem = {
   productId: string;
@@ -64,7 +65,7 @@ async function postJson<T>(path: string, body: unknown): Promise<T> {
   try {
     res = await fetch(path, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", ...authHeaders() },
       body: JSON.stringify(body),
     });
   } catch {
@@ -76,6 +77,7 @@ async function postJson<T>(path: string, body: unknown): Promise<T> {
 
   if (res.ok) return res.json();
 
+  notifyIfUnauthorized(res);
   const problem = await res.json().catch(() => ({}));
   throw new ApiError(
     problem.detail ?? "Something went wrong. Please try again.",

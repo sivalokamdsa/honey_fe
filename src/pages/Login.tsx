@@ -1,17 +1,31 @@
 import { useState, type FormEvent, type ReactNode } from "react";
-import { Link } from "react-router-dom";
-import { login, type LoginResult } from "../api/auth";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { login } from "../api/auth";
 import { ApiError } from "../api/registrations";
+import { useAuth } from "../auth/useAuth";
 import SiteNav from "../components/SiteNav";
 import "./Register.css";
 
+/** Only allow in-app redirects, never off-site URLs. */
+function safeReturnPath(from: unknown): string {
+  return typeof from === "string" && from.startsWith("/") && !from.startsWith("//")
+    ? from
+    : "/";
+}
+
 export default function Login() {
+  const { user, login: storeSession, logout } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const returnTo = safeReturnPath(
+    (location.state as { from?: unknown } | null)?.from,
+  );
+
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [generalError, setGeneralError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
-  const [user, setUser] = useState<LoginResult | null>(null);
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
@@ -19,7 +33,9 @@ export default function Login() {
     setErrors({});
     setGeneralError(null);
     try {
-      setUser(await login({ phone, password }));
+      const session = await login({ phone, password });
+      storeSession(session);
+      navigate(returnTo, { replace: true });
     } catch (err) {
       if (err instanceof ApiError && Object.keys(err.fieldErrors).length > 0) {
         setErrors(err.fieldErrors);
@@ -55,7 +71,20 @@ export default function Login() {
           {user ? (
             <div className="success">
               <h2>స్వాగతం! Welcome, {user.fullName}</h2>
-              <p>You are logged in as {user.phone}.</p>
+              <p>
+                You are logged in as {user.phone}
+                {user.role === "admin" ? " (admin)" : ""}.
+              </p>
+              <button
+                type="button"
+                className="btn-honey"
+                onClick={() => {
+                  logout();
+                  navigate("/", { replace: true });
+                }}
+              >
+                Logout
+              </button>
             </div>
           ) : (
             <form onSubmit={onSubmit} noValidate>

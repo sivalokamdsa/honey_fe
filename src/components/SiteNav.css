@@ -35,6 +35,35 @@
   color: #fff;
 }
 
+/* ---------- SIGNED-IN USER ---------- */
+.nav-user {
+  font-family: "Poppins", "Noto Sans Telugu", sans-serif;
+  font-size: 13px;
+  color: var(--honey-gold);
+  padding: 6px 8px;
+  white-space: nowrap;
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.nav-logout {
+  font-family: "Poppins", "Noto Sans Telugu", sans-serif;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--honey-cream);
+  background: transparent;
+  border: 1px solid rgba(232, 167, 61, 0.35);
+  padding: 4px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.nav-logout:hover,
+.nav-logout:focus-visible {
+  background: rgba(232, 167, 61, 0.2);
+  color: var(--honey-gold);
+}
+
 /* ---------- LINK GROUP (desktop: one row, pushed right) ---------- */
 .nav-links {
   display: flex;

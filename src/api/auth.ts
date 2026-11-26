@@ -1,22 +1,17 @@
 import { ApiError } from "./registrations";
+import type { Session } from "../lib/session";
 
 export type LoginInput = {
   phone: string;
   password: string;
 };
 
-export type LoginResult = {
-  id: string;
-  fullName: string;
-  phone: string;
-};
-
 /**
- * POST /api/v1/auth/login. The backend issues no token or session, so a
- * successful call only confirms the credentials and returns the profile.
- * 401 (detail: "Invalid phone or password") is thrown as ApiError.
+ * POST /api/v1/auth/login. Expects `{ token, user: { id, fullName, phone, role } }`.
+ * The caller stores the session (see AuthProvider). 401 (detail:
+ * "Invalid phone or password") is thrown as ApiError.
  */
-export async function login(input: LoginInput): Promise<LoginResult> {
+export async function login(input: LoginInput): Promise<Session> {
   let res: Response;
   try {
     res = await fetch("/api/v1/auth/login", {
