@@ -65,6 +65,11 @@ p {
   z-index: 1;
   max-width: var(--max-w);
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
 }
 .hero-eyebrow {
   font-family: "Poppins", sans-serif;
@@ -105,8 +110,8 @@ p {
   position: relative;
   box-shadow: 0 8px 26px rgba(232, 167, 61, 0.35);
 }
-.hero-drop::after {
-  content: "తే";
+/* .hero-drop::after {
+  content: "తే నె";
   position: absolute;
   inset: 0;
   display: flex;
@@ -114,9 +119,9 @@ p {
   justify-content: center;
   font-family: "Noto Serif Telugu", serif;
   font-weight: 800;
-  font-size: 26px;
+  font-size: 14px;
   color: #3b2612;
-}
+} */
 
 /* ---------- LAYOUT ---------- */
 main {

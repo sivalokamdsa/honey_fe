@@ -24,34 +24,34 @@ export default function App() {
       <Route
         path="/beekeeping"
         element={
-          <RequireAuth>
-            <BeeKeeping />
-          </RequireAuth>
+          // <RequireAuth>
+          <BeeKeeping />
+          // </RequireAuth>
         }
       />
       <Route
         path="/beekeeping2"
         element={
-          <RequireAuth>
-            <BeeKeeping2 />
-          </RequireAuth>
+          // <RequireAuth>
+          <BeeKeeping2 />
+          // </RequireAuth>
         }
       />
       <Route
         path="/checkout"
         element={
-          <RequireAuth>
-            <Checkout />
-          </RequireAuth>
+          // <RequireAuth>
+          <Checkout />
+          // </RequireAuth>
         }
       />
 
       <Route
         path="/admin"
         element={
-          <RequireAuth role="admin">
-            <Admin />
-          </RequireAuth>
+          // <RequireAuth role="admin">
+          <Admin />
+          // </RequireAuth>
         }
       />
     </Routes>

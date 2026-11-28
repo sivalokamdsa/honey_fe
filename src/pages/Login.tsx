@@ -5,10 +5,13 @@ import { ApiError } from "../api/registrations";
 import { useAuth } from "../auth/useAuth";
 import SiteNav from "../components/SiteNav";
 import "./Register.css";
+import Header from "./Header";
 
 /** Only allow in-app redirects, never off-site URLs. */
 function safeReturnPath(from: unknown): string {
-  return typeof from === "string" && from.startsWith("/") && !from.startsWith("//")
+  return typeof from === "string" &&
+    from.startsWith("/") &&
+    !from.startsWith("//")
     ? from
     : "/";
 }
@@ -53,18 +56,9 @@ export default function Login() {
     <>
       <SiteNav />
 
-      <header className="hero">
-        <div className="hero-inner">
-          <div className="hero-drop" />
-          <div className="hero-eyebrow">
-            <span className="dot" />
-            ప్రకృతి ఆరోగ్య గ్రంథం
-            <span className="dot" />
-          </div>
-          <h1>లాగిన్</h1>
-          <p className="tag">Login with your phone number and password.</p>
-        </div>
-      </header>
+      <Header>
+        <p className="tag">Login to Honey website</p>
+      </Header>
 
       <main>
         <div className="register-card">

@@ -4,6 +4,11 @@
   z-index: 10;
   background: #2a1a0c;
   border-bottom: 1px solid rgba(232, 167, 61, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  gap: 20px;
+  padding: 20px;
 }
 .site-nav-inner {
   display: flex;

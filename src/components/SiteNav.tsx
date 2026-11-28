@@ -37,6 +37,9 @@ export default function SiteNav({ sections = [] }: Props) {
 
   return (
     <nav className="site-nav" aria-label="Main">
+      <div id="logo">
+        <img src="../../logo.png" alt="" />
+      </div>
       <div className="site-nav-inner">
         <NavLink to="/">హోమ్ · Home</NavLink>
         <NavLink to="/intro">Index</NavLink>
