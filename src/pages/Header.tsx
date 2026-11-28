@@ -1,6 +1,6 @@
 import "./Header.css";
 
-export default function Header({ children }) {
+export default function Header({ children }: { children?: React.ReactNode }) {
   return (
     <>
       <header className="hero" id="top">

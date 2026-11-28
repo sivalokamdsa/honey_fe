@@ -7,7 +7,7 @@ import Intro from "./pages/intro";
 import Checkout from "./pages/Checkout";
 import Login from "./pages/Login";
 import Admin from "./pages/Admin";
-import RequireAuth from "./auth/RequireAuth";
+// import RequireAuth from "./auth/RequireAuth";
 
 // Access rules:
 //   public      : /, /intro, /register, /login
