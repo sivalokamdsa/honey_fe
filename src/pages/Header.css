@@ -8,7 +8,7 @@
 }
 
 @media (max-width: 599px) {
-  #logo {
+  .site-nav {
     flex-direction: column;
   }
 }
